@@ -112,6 +112,9 @@ for(i in 1:nmov)
 {
   img <- load.image(images[i])
   black[i] <- diff.col(img, col = c(0,0,0))
+}
+index <- which(black < .2)
+movie.data[index, ]
 
 ### worksheet-8
 
