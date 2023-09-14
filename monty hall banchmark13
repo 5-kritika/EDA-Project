@@ -1,0 +1,77 @@
+MontyHall <- function()
+{
+  # setting things up
+  doors <- 1:3
+  prize <- sample(1:3, 1)  #choose a door at ransom
+  
+  chosen.door <- sample(1:3, 1)  
+  possibilities <- (1:3)[-c(prize,chosen.door)] # doors left to reveal
+  
+  # if only one door left to reveal, reveal that door
+  if( length(possibilities) == 1)  
+  {
+    reveal <- possibilities
+  } else{
+    reveal <- sample(possibilities, size = 1)
+  }
+  # Did I win if I don't change door
+  win.no.switch <- chosen.door == prize    
+  
+  return(win.no.switch)
+}
+
+repeats <- 1e4
+letsplay <- numeric(length = 1e4)
+for(r in 1:1e4)
+{
+  
+  letsplay[r] <- MontyHall()
+}
+mean(letsplay)   #Prob of winning if you don't switch
+
+1 - mean(letsplay)   #Prob of winning if you switched door
+
+ ###########
+
+library(profvis)
+library(rbenchmark)
+benchmark(
+  {
+    n <- 50
+    m <- 1e3
+    A <- matrix(runif(n*m), nrow = n, ncol = m)
+    # p_vec will store p_i eventually
+    p_vec <- numeric(length = m)
+    # running a loop for each column
+    # to find the norm (the numerator)
+    for(k in 1:m)
+    {
+      p_vec[k] <- norm(A[ ,k], type = "2")
+    }
+    # divide by the sum
+    p_vec <- p_vec/sum(p_vec)
+    # choosing column
+    chosen <- sample(1:m, size = 1, prob = p_vec)
+  } ,
+  {
+    n <- 50
+    m <- 1e3
+    A <- matrix(runif(n*m), nrow = n, ncol = m)
+    # p_vec will store p_i eventually
+    p_vec <- numeric(length = m)
+    # running a loop for each column
+    # to find the norm (the numerator)
+    p_vec <- sqrt(colSums(A*A))
+    # divide by the sum
+    p_vec <- p_vec/sum(p_vec)
+    # choosing column
+    chosen <- sample(1:m, size = 1, prob = p_vec)
+  },
+  replications = 20
+)
+
+
+
+
+
+
