@@ -1,0 +1,60 @@
+
+dog <- load.image("")
+col.mat <- as.array(dog[,,1,])
+col.mat <- col.mat[1:600,1:600,,]
+reduce <- array(0,dim =c(60,60,3))
+red.dim <- dim(reduce)
+avg <- rep(0,3)
+for (i in 1:red.dim[1]) {
+  for (j in 1:red.dim[2]) {
+    ind1 <- 10*(i-1):10*i
+    ind2 <- 10*(j-1):10*j
+    
+    
+    avg[1] <- mean(col.mat[ind1,ind2,1])
+    avg[2] <- mean(col.mat[ind1,ind2,2])
+    avg[3] <- mean(col.mat[ind1,ind2,3])
+    
+    reduce[i,j,] <- avg
+  } 
+  
+}
+par(mfrow = c(1,2))
+plot(dog)
+plot(as.cimg(reduce))
+save.image(as.cimg(reduce),"")
+
+crop <- function(img, n)
+  {
+  col.mat <- as.array(img[,,1,])
+  dims <- dim(image)
+reduce <- array(0,dim=c(n,n,3))
+red.dim <- dim(reduce)
+avg <- rep(0,3)
+
+for(i in 1:red.dim[1]){
+  for(j in 1:red.dim[2]){
+    
+    k <- dims[1]/n
+    
+    
+  ind1 <- k*(i-1):k*i 
+  ind2 <- k*(j-1):k*j
+  
+  
+  avg[1] <- mean(col.mat[ind1,ind2,1])
+  avg[2] <- mean(col.mat[ind1,ind2,2])
+  avg[3] <- mean(col.mat[ind1,ind2,3])
+  
+  reduce[i,j,] <- avg
+                 
+    
+  }
+    
+  
+}
+
+}
+crop()
+
+
