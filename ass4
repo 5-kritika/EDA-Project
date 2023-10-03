@@ -1,0 +1,49 @@
+file <- read.csv("movie_unweighted.csv")
+
+hist(file$ratings, main = "Histogram of rating", xlab = "Ratings", col = "white",xlim = c(7.5,10))
+
+par(mfrow = c(1,2))
+
+hist(file$unweighted, main = "Histogram of unweighted", xlab = "unweighted", col = "yellow", xlim = c(7.5,10))
+######both are positively skewed
+
+
+abline(v = mean(file$ratings), col = "purple", lty = 3, lwd = 3)
+
+abline(v = median(file$ratings) , col = "orange", lty = 2, lwd = 3)
+
+legend("topright", legend = c("sample mean","sample median"), fill = c("purple","orange"))
+
+
+legend("topright", legend = c("sample mean","sample median"), col = c("purple","orange"), lty = c(3,2))
+N <- 100
+xi <- 1:N
+x <- sample(xi, 10)
+
+
+mu <- mean(xi)
+
+sig1 <- (var(xi))*99/100
+
+
+
+reps <- 1000
+
+means <- numeric(length = reps)
+vars <- numeric(length = reps)
+
+for (r in 1:reps) {
+  
+  samp <- sample(1:100, 10) 
+  
+  means[r] <- mean(samp)
+  
+  vars[r] <- var(samp)
+}
+
+mean(means)
+mean(vars)
+
+
+
+
