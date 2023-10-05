@@ -23,12 +23,12 @@ for (r in 1:reps) {
   
   samp <- sample(1:N, 10, replace = TRUE)
   
-  means[r] <- mean(samp)
+  means[r] <- mean(samp)   ##### xr = sum(x)/n    x = sample  = x bar
   vars[r] <- var(samp)
   
 }
 
-mean(means)
+mean(means)   #### mean of x bar     
 var(means)
 
 ##### wor
@@ -44,8 +44,8 @@ for (j in 1:N) {
   
 }
 
-mean(means_wor)
-mean(vars_wor)
+mean(means_wor)   ##### mean for x bar
+var(means_wor)
 
 
 
