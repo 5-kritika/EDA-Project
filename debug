@@ -1,0 +1,14 @@
+MatNorm <- function(A, type)
+{
+  value <- 0
+  if(type == "frob")
+  {
+    value <- norm(A,"F")
+  } else if(type == "max")
+  {
+    value <- norm(A, "M")
+  }else{
+    stop("Invalid norm type") 
+  }
+  return(value)
+}
