@@ -1,0 +1,204 @@
+library(Rcpp)
+#### adding to integers
+
+Radd <- function(x,y){
+  sum <- x +y
+
+  return(sum)
+}
+
+
+cppFunction(' int Cadd( int x, int y){
+ 
+   int  foo = x + y;
+ 
+ return foo;
+
+ }')
+
+Radd(14,34)
+Cadd(14,34)
+
+library(rbenchmark)
+benchmark(Radd(34,45),Cadd(34,45))
+
+
+#### calculating eular norm
+
+Reuc <- function(x,y){
+  t <- sqrt(sum(x-y)^2)
+  
+  return(t)
+}
+
+cppFunction(' double Ceuc(NumericVector x, NumericVector y){
+    double track = 0;
+    int n = x.size();
+    
+    for(int i = 0; i < n; i++){
+    track = track + pow(x[i] - y[i],2);
+    }
+    
+    track = sqrt(track);
+    
+    return track;
+    
+  }')
+
+x <- 1:10
+y <- 3:12
+
+all.equal(Reuc(x,y), Ceuc(x,y))
+
+x <- 1e4
+y <- 1e4
+all.equal(Reuc(x,y), Ceuc(x,y))
+
+benchmark(Reuc(x,y), Ceuc(x,y), replications = 1000)
+
+
+
+#####   Q2
+
+funcR <-function(vec){
+  temp <- log(vec)/sum(log(vec))
+  
+  return(temp)
+}
+
+
+cppFunction(' NumericVector funcC( NumericVector x){
+            
+          double sum = 0;
+            int n = x.size();
+      for(int i = 0 ;i < n; i ++){
+      
+      NumericVector logx = x;
+      NumericVector rtn = x;
+      
+    for(int i = 0; i < n ; i++)
+            {
+            logx[i] = log(x[i]);
+            
+            sum = sum + logx[i];
+            }      
+    for( int  j = 0; j < n ; j++){
+       
+       rtn[j] = logx[j]/sum;
+       
+    }  
+    return rtn;
+    
+            }')
+
+
+###   Q3
+cppFunction(' NumericMatrix mat(NumericMatrix x, NumericMatrix y){
+        
+        int n = x.nrow();
+        
+        int m = y.ncol();
+         NumericMatrix out(n,m);
+        
+        for(int i = 0; i < n; i++){
+         for(int j = 0; j < m ; j++){
+         out = x(i,j) + y(i,j);
+         }
+        
+        
+        }
+            
+            
+        return out;    
+            
+            }')
+
+
+cppFunction(' NumericVector cols(NumericMatrix x){
+            
+            int n = x.nrow();
+            int m = x.ncol();
+            NumericVector out(m);
+        for(int j = 0; j < m; j++){
+        for(int i = 0; i < n; i++){
+      out[j] = out[j] + x(i,j);
+        
+        
+        }
+      }    
+            
+   return out;         
+            
+            
+}')
+
+
+x <- matrix(runif(1:1e5), nrow = 1e3, ncol = 1e3)
+
+
+
+library(rbenchmark)
+benchmark(cols(x), colSums(x))
+
+
+all.equal(cols(x), colSums(x))
+
+
+cppFunction(' LogicalVector posC(NumericVector x){
+            
+            int n = x.size();
+            
+        LogicalVector out(n);
+        
+        for(int i ; i < n ; i++){
+        out[i] = x[i] > 0 ;
+        }    
+            
+          return out;   
+            
+            
+            
+}')
+
+
+
+rhomatR <- function(n,rho){
+  mat <- matrix(0, nrow = n, ncol = n)
+  
+  for(i in 1:n){
+    for(j in 1:n){
+      
+      mat[i,j] <- mat[i,j]**abs(i-j)
+    }
+  }
+  
+  return(mat)
+}
+
+
+cppFunction('NumericMatrix rhomatC(int n , double rho){
+         NumericMatrix out(n,n);
+         
+         
+         for(int i = 0; i < n ; i++){
+         for(int j = 0; j < n; j++){
+         
+         out(i,j) = pow(rho, abs(i-j));
+         
+         
+         
+         
+  }
+    }
+            
+            
+        return out;    
+            
+            
+            }')
+
+
+
+
+
+
